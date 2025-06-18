@@ -4,6 +4,7 @@ import com.galeria.artes.dto.ArtistaDTO;
 import com.galeria.artes.dto.ArtistaDetalhadoDTO;
 import com.galeria.artes.model.Artista;
 import com.galeria.artes.service.ArtistaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;

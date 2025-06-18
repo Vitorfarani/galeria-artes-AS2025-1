@@ -1,16 +1,15 @@
 package com.galeria.artes.controller;
 
-import com.galeria.artes.dto.ObraDTO;
+import com.galeria.artes.dto.ObraBase64DTO;
 import com.galeria.artes.model.Obra;
 import com.galeria.artes.service.ObraService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -20,25 +19,14 @@ public class ObraController {
     @Autowired
     private ObraService obraService;
 
-    @PostMapping
-    public ResponseEntity<Obra> cadastrar(
-            @RequestParam String titulo,
-            @RequestParam String descricao,
-            @RequestParam Long artistaId,
-            @RequestParam String dataCriacao,
-            @RequestParam MultipartFile imagem
-    ) throws IOException {
-        ObraDTO dto = new ObraDTO(
-                titulo,
-                descricao,
-                artistaId,
-                LocalDate.parse(dataCriacao),
-                imagem
-        );
 
-        Obra obraCriada = obraService.salvar(dto);
+    @PostMapping("/base64")
+    public ResponseEntity<Obra> cadastrarViaBase64(@RequestBody ObraBase64DTO dto) throws IOException {
+        Obra obraCriada = obraService.salvarViaJson(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(obraCriada);
     }
+
+
 
     @GetMapping
     public ResponseEntity<List<Obra>> listar() {
@@ -60,4 +48,6 @@ public class ObraController {
     public ResponseEntity<List<Obra>> buscarPorTitulo(@RequestParam String titulo) {
         return ResponseEntity.ok(obraService.buscarPorTitulo(titulo));
     }
+
+
 }

@@ -3,6 +3,7 @@ package com.galeria.artes.controller;
 import com.galeria.artes.dto.ExposicaoDTO;
 import com.galeria.artes.model.Exposicao;
 import com.galeria.artes.service.ExposicaoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

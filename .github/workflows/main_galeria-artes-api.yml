@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://index.docker.io/v1/
-        username: ${{ secrets.AzureAppService_ContainerUsername_a452cf51d4dc4fab97e02f2a1088e642 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_55116b4ae4f04d5a9937bd25395ac718 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_7fc597c5a9544a11b3f44e8849203741 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_56897b9e27b640dfbe31411450d60a20 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_a452cf51d4dc4fab97e02f2a1088e642 }}/vitorfarani/galeriaartes-api-v1:${{ github.sha }}
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_7fc597c5a9544a11b3f44e8849203741 }}/vitorfarani/galeriaartes-api-correto:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'galeria-artes-api'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_1cf9b6527d164b69a2597b8b8e8624c3 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_a452cf51d4dc4fab97e02f2a1088e642 }}/vitorfarani/galeriaartes-api-v1:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_e832ba95155e43da8f1be064d4f1e43b }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_7fc597c5a9544a11b3f44e8849203741 }}/vitorfarani/galeriaartes-api-correto:${{ github.sha }}'

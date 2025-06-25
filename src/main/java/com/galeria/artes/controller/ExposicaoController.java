@@ -19,14 +19,16 @@ public class ExposicaoController {
     private ExposicaoService exposicaoService;
 
     @PostMapping
-    public ResponseEntity<Exposicao> cadastrar(@RequestBody ExposicaoDTO dto) {
+    public ResponseEntity<Exposicao> cadastrar(@Valid @RequestBody ExposicaoDTO dto) {
         Exposicao criada = exposicaoService.salvar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(criada);
     }
 
     @GetMapping
-    public ResponseEntity<List<Exposicao>> listar() {
-        return ResponseEntity.ok(exposicaoService.listar());
+    public ResponseEntity<List<Exposicao>> listar(@RequestParam(required = false) String nome) {
+        return ResponseEntity.ok(
+                (nome == null) ? exposicaoService.listar() : exposicaoService.buscarPorNome(nome)
+        );
     }
 
     @GetMapping("/{id}")
@@ -38,10 +40,5 @@ public class ExposicaoController {
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         exposicaoService.deletar(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/buscar")
-    public ResponseEntity<List<Exposicao>> buscarPorNome(@RequestParam String nome) {
-        return ResponseEntity.ok(exposicaoService.buscarPorNome(nome));
     }
 }

@@ -20,14 +20,14 @@ public class ArtistaController {
     private ArtistaService service;
 
     @PostMapping
-    public ResponseEntity<Artista> cadastrar(@RequestBody ArtistaDTO dto) {
+    public ResponseEntity<Artista> cadastrar(@Valid @RequestBody ArtistaDTO dto) {
         Artista criado = service.salvar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(criado);
     }
 
     @GetMapping
-    public List<Artista> listar() {
-        return service.listar();
+    public List<Artista> listar(@RequestParam(required = false) String nome) {
+        return (nome == null) ? service.listar() : service.buscarPorNome(nome);
     }
 
     @GetMapping("/{id}")
@@ -35,9 +35,8 @@ public class ArtistaController {
         return ResponseEntity.ok(service.buscarDetalhadoPorId(id));
     }
 
-
     @PutMapping("/{id}")
-    public ResponseEntity<Artista> atualizar(@PathVariable Long id, @RequestBody ArtistaDTO dto) {
+    public ResponseEntity<Artista> atualizar(@PathVariable Long id, @Valid @RequestBody ArtistaDTO dto) {
         return ResponseEntity.ok(service.atualizar(id, dto));
     }
 
@@ -46,13 +45,4 @@ public class ArtistaController {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/buscar")
-    public List<Artista> buscarPorNome(@RequestParam String nome) {
-        return service.buscarPorNome(nome);
-    }
-
-
-
-
 }

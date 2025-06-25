@@ -1,6 +1,7 @@
 package com.galeria.artes.service;
 
 import com.galeria.artes.dto.ObraBase64DTO;
+import com.galeria.artes.dto.ObraDetalhadaDTO;
 import com.galeria.artes.model.Artista;
 import com.galeria.artes.model.Obra;
 import com.galeria.artes.repository.ArtistaRepository;
@@ -44,6 +45,18 @@ public class ObraService {
 
     public List<Obra> buscarPorTitulo(String titulo) {
         return obraRepository.findByTituloContainingIgnoreCase(titulo);
+    }
+
+    public ObraDetalhadaDTO detalhar(Long id) {
+        Obra obra = buscarPorId(id);
+        return new ObraDetalhadaDTO(
+                obra.getId(),
+                obra.getTitulo(),
+                obra.getDescricao(),
+                obra.getDataCriacao().toString(),
+                obra.getArtista().getNome(),
+                "/imagens/" + Paths.get(obra.getCaminhoImagem()).getFileName().toString()
+        );
     }
 
     public Obra salvarViaJson(ObraBase64DTO dto) throws IOException {

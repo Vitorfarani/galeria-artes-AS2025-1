@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Base64;
@@ -60,24 +61,37 @@ public class ObraService {
     }
 
     public Obra salvarViaJson(ObraBase64DTO dto) throws IOException {
-        Artista artista = artistaRepository.findById(dto.artistaId())
-                .orElseThrow(() -> new RuntimeException("Artista não encontrado"));
+        try {
+            Artista artista = artistaRepository.findById(dto.artistaId())
+                    .orElseThrow(() -> new RuntimeException("Artista não encontrado com ID: " + dto.artistaId()));
 
-        byte[] imagemBytes = Base64.getDecoder().decode(dto.imagemBase64());
-        String nomeArquivo = dto.titulo().replaceAll("\\s+", "_").toLowerCase() + ".jpg";
-        String caminho = diretorioImagens + nomeArquivo;
+            byte[] imagemBytes = Base64.getDecoder().decode(dto.imagemBase64());
+            String nomeArquivo = dto.titulo().replaceAll("\\s+", "_").toLowerCase() + ".jpg";
+            String caminho = diretorioImagens + nomeArquivo;
 
-        Files.write(Paths.get(caminho), imagemBytes);
+            // Garante que o diretório existe
+            Path pathDiretorio = Paths.get(diretorioImagens);
+            Files.createDirectories(pathDiretorio);
 
-        Obra obra = new Obra(
-                null,
-                dto.titulo(),
-                dto.descricao(),
-                LocalDate.parse(dto.dataCriacao()),
-                caminho,
-                artista
-        );
+            // Log para debug
+            System.out.println("Salvando imagem em: " + caminho);
 
-        return obraRepository.save(obra);
+            // Salva a imagem no disco
+            Files.write(Paths.get(caminho), imagemBytes);
+
+            Obra obra = new Obra(
+                    null,
+                    dto.titulo(),
+                    dto.descricao(),
+                    LocalDate.parse(dto.dataCriacao()),
+                    caminho,
+                    artista
+            );
+
+            return obraRepository.save(obra);
+        } catch (Exception e) {
+            e.printStackTrace(); // ou use um logger se preferir
+            throw new RuntimeException("Erro ao salvar obra: " + e.getMessage(), e);
+        }
     }
 }
